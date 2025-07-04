@@ -43,8 +43,14 @@ def tcp_check(host: str, port: int, timeout: int = 3) -> TcpCheckResult:
     """
     port = int(port)
     last_err = ''
+    try:
+        infos = socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM)
+    except (socket.gaierror, socket.herror, OSError) as e:
+        # Couldn't resolve or connect — return as failure
+        return TcpCheckResult(0, '', format_socket_error(e), None, None)
+
     # Try all addresses for the host (IPv4/IPv6, etc)
-    for family, socktype, proto, canonname, sockaddr in socket.getaddrinfo(host, port, 0, socket.SOCK_STREAM):
+    for family, socktype, proto, canonname, sockaddr in infos:
         try:
             with closing(socket.socket(family, socket.SOCK_STREAM, proto)) as sock:
                 sock.settimeout(timeout)
