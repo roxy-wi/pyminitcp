@@ -1,4 +1,4 @@
-name: pyminiping CI
+name: pyminitcp CI
 
 on:
   push:
