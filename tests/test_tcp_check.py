@@ -41,4 +41,4 @@ def test_tcp_check_domain_fail():
     # Non-existent domain
     result = pyminitcp.tcp_check("nonexistentdomain1234567890.com", 80, timeout=2)
     assert result.status == 0
-    assert "gaierror" in result.error.lower() or "address" in result.error.lower() or "not known" in result.error.lower()
+    assert "unreachable" in result.error.lower()
